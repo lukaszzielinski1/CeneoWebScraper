@@ -7,6 +7,7 @@ import os
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
+from app.models.product import Product
 
 if not os.path.exists("app/opinions"):
     os.makedirs("app/opinions")
@@ -44,8 +45,11 @@ def index(name="Hello World"):
 def extract():
     if request.method == "POST":
         product_id = request.form.get("product_id")
+        product = Product(product_id)
+        product.extract_product()
         url = f"https://www.ceneo.pl/{product_id}#tab=reviews"
         all_opinions = []
+        response = response.get(url)
         while(url):
             response = requests.get(url)
             page = BeautifulSoup(response.text, 'html.parser')
