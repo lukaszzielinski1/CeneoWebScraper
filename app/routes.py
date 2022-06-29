@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 from app.models.product import Product
+import markdown
 
 if not os.path.exists("app/opinions"):
     os.makedirs("app/opinions")
@@ -38,8 +39,12 @@ selectors = {
 @app.route('/')
 @app.route('/index')
 @app.route('/index/<name>')
-def index(name="Hello World"):
-    return render_template("index.html.jinja", text=name)
+def index():
+    with open('README.md', 'r') as f:
+        md = f.read()
+    
+    html = markdown.markdown(md, extensions=['tables'])
+    return render_template("index.html.jinja", html = html)
 
 @app.route('/extract', methods=('POST', 'GET'))
 def extract():
